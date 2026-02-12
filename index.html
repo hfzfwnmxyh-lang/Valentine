@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Valentinstag 💖</title>
+
+<style>
+body{
+  margin:0;
+  min-height:100vh;
+  display:grid;
+  place-items:center;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:linear-gradient(135deg,#ff758c,#ff7eb3,#a18cd1);
+  overflow:hidden;
+}
+
+.card{
+  width:min(750px,95%);
+  background:rgba(255,255,255,0.12);
+  backdrop-filter:blur(15px);
+  border-radius:20px;
+  padding:25px;
+  text-align:center;
+  color:white;
+  box-shadow:0 25px 60px rgba(0,0,0,.35);
+}
+
+img{
+  width:200px;
+  border-radius:15px;
+  margin-bottom:15px;
+}
+
+h1{
+  margin:0 0 10px 0;
+}
+
+.actions{
+  position:relative;
+  margin-top:15px;
+  min-height:60px;
+}
+
+button{
+  padding:12px 18px;
+  border:none;
+  border-radius:14px;
+  font-weight:bold;
+  cursor:pointer;
+  font-size:16px;
+  margin:5px;
+}
+
+.yes{
+  background:#ff4d6d;
+  color:white;
+}
+
+.playzone{
+  position:relative;
+  display:inline-block;
+  width:200px;
+  height:60px;
+}
+
+#btnNo{
+  position:absolute;
+  left:20px;
+  top:10px;
+  background:white;
+  color:#333;
+}
+
+.hint{
+  margin-top:10px;
+  font-size:14px;
+}
+
+.overlay{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.6);
+  display:none;
+  place-items:center;
+}
+
+.modal{
+  background:white;
+  color:#333;
+  padding:25px;
+  border-radius:20px;
+  text-align:center;
+  max-width:400px;
+}
+
+.heart{
+  position:fixed;
+  font-size:20px;
+  animation:float 3s linear forwards;
+}
+
+@keyframes float{
+  0%{transform:translateY(0) scale(1); opacity:1;}
+  100%{transform:translateY(-300px) scale(1.8); opacity:0;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <img src="minion.jpeg"/>
+  <h1>Willst du mein Valentinstags-Date sein? 💘</h1>
+
+  <div class="actions">
+    <button class="yes" id="btnYes">Ja 🥰</button>
+    <div class="playzone">
+      <button id="btnNo">Nein 😅</button>
+    </div>
+  </div>
+
+  <div class="hint" id="hint">Versuch ruhig auf „Nein“ zu klicken 😏</div>
+</div>
+
+<div class="overlay" id="overlay">
+  <div class="modal">
+    <h2 id="modalTitle"></h2>
+    <p id="modalText"></p>
+    <button onclick="overlay.style.display='none'">Schließen</button>
+  </div>
+</div>
+
+<script>
+const btnNo = document.getElementById("btnNo");
+const hint = document.getElementById("hint");
+const overlay = document.getElementById("overlay");
+const modalTitle = document.getElementById("modalTitle");
+const modalText = document.getElementById("modalText");
+
+let tries = 0;
+
+function moveNo(){
+  const zone = btnNo.parentElement.getBoundingClientRect();
+  const btn = btnNo.getBoundingClientRect();
+  const maxX = zone.width - btn.width;
+  const maxY = zone.height - btn.height;
+  btnNo.style.left = Math.random()*maxX + "px";
+  btnNo.style.top = Math.random()*maxY + "px";
+  hint.textContent = ["Hehe 😜","Zu langsam 😅","Fast! 👀","Nope 😂"][Math.floor(Math.random()*4)];
+}
+
+btnNo.addEventListener("mouseenter", moveNo);
+btnNo.addEventListener("pointerdown", e=>{e.preventDefault(); moveNo();});
+
+btnNo.addEventListener("click", ()=>{
+  tries++;
+  if(tries==1){
+    modalTitle.textContent="Bist du sicher? 🥺";
+    modalText.textContent="Also wirklich wirklich sicher?";
+  } else if(tries==2){
+    modalTitle.textContent="Letzte Chance 😳";
+    modalText.textContent="100% sicher sicher?";
+  } else{
+    modalTitle.textContent="Okay 😄";
+    modalText.textContent="Danke für deine Ehrlichkeit 💛";
+  }
+  overlay.style.display="grid";
+});
+
+document.getElementById("btnYes").addEventListener("click", ()=>{
+  modalTitle.textContent="YAAAY 💖";
+  modalText.textContent="Dann ist es offiziell! Ich freu mich mega 🥰";
+  overlay.style.display="grid";
+
+  // hearts animation
+  for(let i=0;i<25;i++){
+    const heart=document.createElement("div");
+    heart.className="heart";
+    heart.textContent="💖";
+    heart.style.left=Math.random()*100+"vw";
+    heart.style.top="100vh";
+    heart.style.fontSize=(20+Math.random()*20)+"px";
+    document.body.appendChild(heart);
+    setTimeout(()=>heart.remove(),3000);
+  }
+});
+</script>
+
+</body>
+</html>
